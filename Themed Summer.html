@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///Users/alexgislason/Downloads/index_2.html -->
+<!-- saved from url=(0049)file:///Users/alexgislason/Downloads/index_6.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -360,8 +360,9 @@ function renderHome() {
     return `<div class="week-card" id="card-${t.id}" data-index="${idx}" data-id="${t.id}"
         style="background:${col.bg};border-left:4px solid ${col.accent};border-top:1px solid ${col.border};border-right:1px solid ${col.border};border-bottom:1px solid ${col.border};"
         draggable="true"
-        ondragstart="dragStart(event,${idx})" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dragDrop(event,${idx})" ondragend="dragEnd(event)">
-      <div class="drag-handle" style="color:${col.accent};opacity:0.5;">⠿</div>
+        ondragstart="dragStart(event,${idx})" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dragDrop(event,${idx})" ondragend="dragEnd(event)"
+        >
+      <div class="drag-handle" style="color:${col.accent};opacity:0.5;" ontouchstart="touchDragStart(event,${idx})" ontouchmove="touchDragMove(event)" ontouchend="touchDragEnd(event)">⠿</div>
       <div class="week-emoji" onclick="openTheme(${t.id})">${t.emoji||'🌟'}</div>
       <div class="week-info" onclick="openTheme(${t.id})">
         <div class="week-num" style="color:${col.accent};">Week ${t.week}</div>
@@ -374,6 +375,7 @@ function renderHome() {
 }
 
 // ── DRAG ─────────────────────────────────────────────
+// ── MOUSE DRAG ───────────────────────────────────────
 function dragStart(e,idx) { dragSrcIndex=idx; e.currentTarget.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; }
 function dragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect='move'; e.currentTarget.classList.add('drag-over'); }
 function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
@@ -381,12 +383,73 @@ function dragEnd(e) { e.currentTarget.classList.remove('dragging'); }
 function dragDrop(e,dropIdx) {
   e.preventDefault(); e.currentTarget.classList.remove('drag-over');
   if (dragSrcIndex===null||dragSrcIndex===dropIdx) return;
+  reorder(dragSrcIndex, dropIdx);
+  dragSrcIndex=null;
+}
+
+function reorder(fromIdx, toIdx) {
   const sorted=[...state.themes].sort((a,b)=>a.order-b.order);
-  const moved=sorted.splice(dragSrcIndex,1)[0];
-  sorted.splice(dropIdx,0,moved);
+  const moved=sorted.splice(fromIdx,1)[0];
+  sorted.splice(toIdx,0,moved);
   sorted.forEach((t,i)=>{ t.order=i; });
-  state.themes=sorted; dragSrcIndex=null;
+  state.themes=sorted;
   save(); renderHome();
+}
+
+// ── TOUCH DRAG ───────────────────────────────────────
+let touchDragIdx = null;
+let touchPlaceholder = null;
+let touchDraggingEl = null;
+let touchOffsetY = 0;
+
+function touchDragStart(e, idx) {
+  e.preventDefault();
+  touchDragIdx = idx;
+  const card = e.currentTarget.closest('.week-card');
+  touchDraggingEl = card;
+  const rect = card.getBoundingClientRect();
+  touchOffsetY = e.touches[0].clientY - rect.top;
+  card.style.opacity = '0.4';
+  card.style.transition = 'none';
+}
+
+function touchDragMove(e) {
+  e.preventDefault();
+  if (touchDragIdx === null) return;
+  const y = e.touches[0].clientY;
+  const cards = [...document.querySelectorAll('.week-card')];
+  let targetIdx = null;
+  cards.forEach((card, i) => {
+    if (i === touchDragIdx) return;
+    const rect = card.getBoundingClientRect();
+    const mid = rect.top + rect.height / 2;
+    if (y < mid && (targetIdx === null || i < targetIdx)) targetIdx = i;
+  });
+  if (targetIdx === null) targetIdx = cards.length - 1;
+  cards.forEach(c => c.classList.remove('drag-over'));
+  if (cards[targetIdx]) cards[targetIdx].classList.add('drag-over');
+}
+
+function touchDragEnd(e) {
+  if (touchDragIdx === null) return;
+  const y = e.changedTouches[0].clientY;
+  const cards = [...document.querySelectorAll('.week-card')];
+  cards.forEach(c => c.classList.remove('drag-over'));
+  if (touchDraggingEl) { touchDraggingEl.style.opacity = ''; touchDraggingEl.style.transition = ''; }
+
+  let targetIdx = null;
+  cards.forEach((card, i) => {
+    if (i === touchDragIdx) return;
+    const rect = card.getBoundingClientRect();
+    const mid = rect.top + rect.height / 2;
+    if (y < mid && (targetIdx === null || i < targetIdx)) targetIdx = i;
+  });
+  if (targetIdx === null) targetIdx = cards.length - 1;
+
+  if (targetIdx !== null && targetIdx !== touchDragIdx) {
+    reorder(touchDragIdx, targetIdx);
+  }
+  touchDragIdx = null; touchDraggingEl = null;
 }
 
 // ── DETAIL ───────────────────────────────────────────
