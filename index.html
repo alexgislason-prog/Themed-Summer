@@ -1,124 +1,103 @@
-
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///Users/alexgislason/Downloads/index_1.html -->
+<!-- saved from url=(0049)file:///Users/alexgislason/Downloads/index_2.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Themed Summer">
-<title>Themed Summer</title><link rel="apple-touch-icon" href="icon.png">
+<title>Themed Summer</title>
 <link rel="apple-touch-icon" href="file:///Users/alexgislason/Downloads/icon.png">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #1a0a2e;
-    color: #f0eaff;
-    min-height: 100vh;
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a0a2e; color: #f0eaff; min-height: 100vh; }
   .app { max-width: 480px; margin: 0 auto; background: #1a0a2e; min-height: 100vh; }
   .screen { display: none; padding: 1rem; padding-bottom: 2rem; }
   .screen.active { display: block; }
 
   .header {
     display: flex; align-items: center; gap: 10px;
-    margin-bottom: 1.25rem; padding-bottom: 0.75rem;
+    margin-bottom: 1rem; padding-bottom: 0.75rem;
     border-bottom: 1px solid #3a1f5e;
     position: sticky; top: 0; background: #1a0a2e; z-index: 10;
     padding-top: 0.75rem;
   }
   .header h1 { font-size: 20px; font-weight: 600; flex: 1; color: #f0eaff; }
-  .sun-icon { font-size: 24px; }
-  .icon-btn {
-    background: none; border: none; cursor: pointer;
-    color: #9b7fc7; font-size: 22px; padding: 4px;
-    display: flex; align-items: center; border-radius: 8px;
-  }
+  .icon-btn { background: none; border: none; cursor: pointer; color: #9b7fc7; font-size: 22px; padding: 4px; display: flex; align-items: center; border-radius: 8px; }
   .icon-btn:hover { background: #2d1550; }
 
-  .week-card {
+  .search-bar {
+    display: flex; align-items: center; gap: 8px;
     background: #241040; border: 1px solid #3a1f5e;
-    border-radius: 14px; padding: 1rem 1.25rem;
-    margin-bottom: 10px; cursor: pointer;
-    display: flex; align-items: center; gap: 14px;
-    transition: border-color 0.15s, background 0.15s;
+    border-radius: 12px; padding: 8px 14px; margin-bottom: 1rem;
   }
-  .week-card:hover { border-color: #6b3fa0; background: #2d1550; }
-  .week-card:active { background: #341860; }
+  .search-bar input {
+    flex: 1; background: none; border: none; color: #f0eaff;
+    font-size: 15px; font-family: inherit; outline: none;
+  }
+  .search-bar input::placeholder { color: #4a2870; }
+  .search-icon { color: #4a2870; font-size: 16px; flex-shrink: 0; }
+  .clear-btn { background: none; border: none; color: #4a2870; font-size: 18px; cursor: pointer; padding: 0; line-height: 1; }
+
+  .search-results { margin-bottom: 1rem; }
+  .search-result-item {
+    background: #241040; border: 1px solid #3a1f5e;
+    border-radius: 12px; padding: 10px 14px; margin-bottom: 8px;
+  }
+  .search-result-theme { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; opacity: 0.8; }
+  .search-result-cat { font-size: 11px; color: #7a5fa0; margin-bottom: 3px; }
+  .search-result-text { font-size: 15px; color: #f0eaff; }
+  .search-result-text mark { background: none; font-weight: 700; }
+  .search-empty { text-align: center; padding: 2rem; color: #4a2870; font-size: 14px; }
+
+  .week-card {
+    border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 10px; cursor: pointer;
+    display: flex; align-items: center; gap: 14px;
+    transition: opacity 0.15s, transform 0.15s;
+    border-left: 4px solid transparent; position: relative;
+  }
+  .week-card.dragging { opacity: 0.4; }
+  .week-card.drag-over { transform: scale(1.02); }
+  .drag-handle { color: #4a2870; font-size: 18px; cursor: grab; padding: 4px 2px; flex-shrink: 0; touch-action: none; }
+  .drag-handle:active { cursor: grabbing; }
   .week-emoji { font-size: 28px; width: 40px; text-align: center; flex-shrink: 0; }
   .week-info { flex: 1; }
-  .week-num { font-size: 11px; color: #7a5fa0; text-transform: uppercase; letter-spacing: 0.5px; }
+  .week-num { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; }
   .week-title { font-size: 16px; font-weight: 600; color: #f0eaff; margin: 2px 0; }
-  .week-date { font-size: 13px; color: #9b7fc7; display: flex; align-items: center; gap: 4px; }
+  .week-date { font-size: 13px; opacity: 0.75; }
   .chevron { color: #4a2870; font-size: 20px; flex-shrink: 0; }
 
   .add-btn {
-    width: 100%; padding: 0.85rem;
-    background: none; border: 1.5px dashed #3a1f5e;
-    border-radius: 14px; color: #7a5fa0; font-size: 15px;
-    cursor: pointer; display: flex; align-items: center;
-    justify-content: center; gap: 8px; margin-top: 4px;
-    font-family: inherit;
+    width: 100%; padding: 0.85rem; background: none; border: 1.5px dashed #3a1f5e;
+    border-radius: 14px; color: #7a5fa0; font-size: 15px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-top: 4px; font-family: inherit;
   }
   .add-btn:hover { background: #241040; border-color: #6b3fa0; }
 
-  .detail-meta {
-    background: #241040; border-radius: 10px;
-    padding: 10px 14px; margin-bottom: 1rem;
-    font-size: 13px; color: #9b7fc7;
-    display: flex; align-items: center; gap: 6px;
-  }
+  .detail-meta { border-radius: 10px; padding: 10px 14px; margin-bottom: 1rem; font-size: 13px; display: flex; align-items: center; gap: 6px; }
   .notes-label { font-size: 12px; color: #7a5fa0; margin-bottom: 5px; }
   .notes-box { margin-bottom: 1rem; }
-  .notes-box textarea {
-    width: 100%; font-size: 14px; padding: 10px 12px;
-    border: 1px solid #3a1f5e; border-radius: 10px;
-    background: #241040; color: #f0eaff;
-    resize: none; line-height: 1.5;
-    font-family: inherit;
-  }
+  .notes-box textarea { width: 100%; font-size: 14px; padding: 10px 12px; border: 1px solid #3a1f5e; border-radius: 10px; background: #241040; color: #f0eaff; resize: none; line-height: 1.5; font-family: inherit; }
   .notes-box textarea:focus { outline: none; border-color: #6b3fa0; }
 
-  .progress-bar {
-    height: 5px; background: #2d1550;
-    border-radius: 3px; margin-bottom: 1.25rem; overflow: hidden;
-  }
-  .progress-fill { height: 100%; background: #c084fc; border-radius: 3px; transition: width 0.3s; }
+  .progress-bar { height: 5px; background: #2d1550; border-radius: 3px; margin-bottom: 1.25rem; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
 
-  .cat-tabs {
-    display: flex; gap: 6px; overflow-x: auto;
-    padding-bottom: 6px; margin-bottom: 1rem; scrollbar-width: none;
-  }
+  .cat-tabs-wrap { margin-bottom: 1rem; }
+  .cat-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
   .cat-tabs::-webkit-scrollbar { display: none; }
-  .cat-tab {
-    flex-shrink: 0; padding: 6px 14px; border-radius: 20px;
-    font-size: 13px; border: 1px solid #3a1f5e;
-    background: none; cursor: pointer; color: #9b7fc7;
-    white-space: nowrap; font-family: inherit;
-    transition: background 0.15s;
-  }
-  .cat-tab.active { background: #6b3fa0; color: #fff; border-color: #6b3fa0; }
+  .cat-tab { flex-shrink: 0; padding: 6px 14px; border-radius: 20px; font-size: 13px; border: 1px solid #3a1f5e; background: none; cursor: pointer; color: #9b7fc7; white-space: nowrap; font-family: inherit; }
+  .cat-tab.active { color: #fff; border-color: transparent; }
+  .add-cat-btn { flex-shrink: 0; padding: 6px 12px; border-radius: 20px; font-size: 13px; border: 1px dashed #3a1f5e; background: none; cursor: pointer; color: #4a2870; white-space: nowrap; font-family: inherit; }
+  .add-cat-btn:hover { border-color: #6b3fa0; color: #9b7fc7; }
 
-  .item-row {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 0; border-bottom: 1px solid #2d1550;
-  }
-  .item-check {
-    width: 22px; height: 22px; border-radius: 50%;
-    border: 1.5px solid #4a2870; background: none;
-    cursor: pointer; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; color: transparent; transition: all 0.15s;
-  }
-  .item-check.done { background: #2d1550; border-color: #c084fc; color: #c084fc; }
+  .item-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #2d1550; }
+  .item-check { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #4a2870; background: none; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: transparent; transition: all 0.15s; }
+  .item-check.done { background: #2d1550; color: #c084fc; border-color: #c084fc; }
   .item-text { flex: 1; font-size: 15px; color: #f0eaff; }
   .item-text.done { text-decoration: line-through; color: #4a2870; }
-  .item-del {
-    background: none; border: none; cursor: pointer;
-    color: #4a2870; font-size: 18px; padding: 0 4px;
-    transition: color 0.15s;
-  }
+  .item-del { background: none; border: none; cursor: pointer; color: #4a2870; font-size: 18px; padding: 0 4px; transition: color 0.15s; }
   .item-del:hover { color: #e05a5a; }
 
   .empty-state { text-align: center; padding: 2.5rem 1rem; color: #4a2870; }
@@ -126,59 +105,60 @@
   .empty-state p { font-size: 14px; }
 
   .add-item-row { display: flex; gap: 8px; margin-top: 12px; }
-  .add-item-row input {
-    flex: 1; font-size: 15px; padding: 10px 14px;
-    border: 1px solid #3a1f5e; border-radius: 10px;
-    background: #241040; color: #f0eaff; font-family: inherit;
-  }
+  .add-item-row input { flex: 1; font-size: 15px; padding: 10px 14px; border: 1px solid #3a1f5e; border-radius: 10px; background: #241040; color: #f0eaff; font-family: inherit; }
   .add-item-row input:focus { outline: none; border-color: #6b3fa0; }
   .add-item-row input::placeholder { color: #4a2870; }
-  .add-item-row button {
-    padding: 10px 18px; background: #6b3fa0; color: #fff;
-    border: none; border-radius: 10px; font-size: 14px;
-    cursor: pointer; font-family: inherit; font-weight: 500;
-  }
-  .add-item-row button:active { background: #7a4fb0; }
+  .add-item-row button { padding: 10px 18px; color: #fff; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; font-family: inherit; font-weight: 500; }
 
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.6); z-index: 100;
-    align-items: flex-end; justify-content: center;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; align-items: flex-end; justify-content: center; padding-bottom: env(safe-area-inset-bottom); }
   .modal-overlay.open { display: flex; }
-  .modal {
-    background: #241040; border-radius: 20px 20px 0 0;
-    border-top: 1px solid #3a1f5e;
-    padding: 1.5rem 1.25rem 2rem;
-    width: 100%; max-width: 480px;
-    max-height: 90vh; overflow-y: auto;
-  }
-  .modal-handle {
-    width: 40px; height: 4px; background: #3a1f5e;
-    border-radius: 2px; margin: 0 auto 1.25rem;
-  }
+  .modal { background: #241040; border-radius: 20px 20px 0 0; border-top: 1px solid #3a1f5e; padding: 1.5rem 1.25rem 2rem; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+  .modal-handle { width: 40px; height: 4px; background: #3a1f5e; border-radius: 2px; margin: 0 auto 1.25rem; }
   .modal h2 { font-size: 18px; font-weight: 600; margin-bottom: 1.25rem; color: #f0eaff; }
   .field-label { font-size: 12px; color: #7a5fa0; margin-bottom: 5px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; }
-  .modal input, .modal textarea {
-    width: 100%; font-size: 15px; padding: 11px 14px;
-    border: 1px solid #3a1f5e; border-radius: 10px;
-    background: #1a0a2e; color: #f0eaff; margin-bottom: 14px;
-    font-family: inherit;
-  }
+  .modal input, .modal textarea { width: 100%; font-size: 15px; padding: 11px 14px; border: 1px solid #3a1f5e; border-radius: 10px; background: #1a0a2e; color: #f0eaff; margin-bottom: 14px; font-family: inherit; }
   .modal input:focus, .modal textarea:focus { outline: none; border-color: #6b3fa0; }
   .modal input::placeholder, .modal textarea::placeholder { color: #4a2870; }
   .modal textarea { resize: none; }
   .date-row { display: flex; gap: 8px; }
   .date-row input { flex: 1; }
+
+  .color-picker { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .color-swatch { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s; }
+  .color-swatch.selected { border-color: #fff; transform: scale(1.15); }
+
   .modal-btns { display: flex; gap: 10px; margin-top: 6px; }
-  .modal-btns button {
-    flex: 1; padding: 13px; border-radius: 12px;
-    font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 500;
-  }
+  .modal-btns button { flex: 1; padding: 13px; border-radius: 12px; font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 500; }
   .btn-cancel { background: #2d1550; border: none; color: #9b7fc7; }
-  .btn-save { background: #6b3fa0; border: none; color: #fff; }
-  .btn-save:active { background: #7a4fb0; }
+  .btn-save { border: none; color: #fff; }
+  .btn-delete { width: 100%; padding: 13px; border-radius: 12px; font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 500; background: #3a1020; border: 1px solid #6b1f3a; color: #e05a5a; margin-top: 10px; }
+
+  .confirm-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
+  .confirm-overlay.open { display: flex; }
+  .confirm-box { background: #241040; border-radius: 16px; padding: 1.5rem; width: 100%; max-width: 320px; border: 1px solid #3a1f5e; text-align: center; }
+  .confirm-box h3 { font-size: 17px; font-weight: 600; color: #f0eaff; margin-bottom: 8px; }
+  .confirm-box p { font-size: 14px; color: #9b7fc7; margin-bottom: 1.25rem; }
+  .confirm-btns { display: flex; gap: 10px; }
+  .confirm-btns button { flex: 1; padding: 12px; border-radius: 10px; font-size: 15px; cursor: pointer; font-family: inherit; font-weight: 500; border: none; }
+  .btn-confirm-cancel { background: #2d1550; color: #9b7fc7; }
+  .btn-confirm-delete { background: #8b1a3a; color: #fff; }
+
+  /* Custom category modal */
+  .cat-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 150; align-items: center; justify-content: center; padding: 1rem; }
+  .cat-modal-overlay.open { display: flex; }
+  .cat-modal { background: #241040; border-radius: 16px; padding: 1.5rem; width: 100%; max-width: 320px; border: 1px solid #3a1f5e; }
+  .cat-modal h3 { font-size: 17px; font-weight: 600; color: #f0eaff; margin-bottom: 1rem; }
+  .cat-input-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+  .cat-input-row input { flex: 1; font-size: 15px; padding: 10px 12px; border: 1px solid #3a1f5e; border-radius: 10px; background: #1a0a2e; color: #f0eaff; font-family: inherit; }
+  .cat-input-row input:focus { outline: none; border-color: #6b3fa0; }
+  .cat-input-row input::placeholder { color: #4a2870; }
+  .cat-input-row button { padding: 10px 14px; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; font-family: inherit; font-weight: 500; color: #fff; }
+  .existing-cats { margin-bottom: 1rem; }
+  .existing-cat-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #2d1550; font-size: 14px; color: #f0eaff; }
+  .existing-cat-row .default-badge { font-size: 11px; color: #4a2870; margin-left: 6px; }
+  .del-cat-btn { background: none; border: none; color: #4a2870; font-size: 18px; cursor: pointer; }
+  .del-cat-btn:hover { color: #e05a5a; }
+  .cat-modal-close { width: 100%; padding: 12px; border-radius: 10px; background: #2d1550; border: none; color: #9b7fc7; font-size: 15px; cursor: pointer; font-family: inherit; }
 </style>
 </head>
 <body>
@@ -186,14 +166,16 @@
 
   <div class="screen active" id="home-screen">
     <div class="header">
-      <span class="sun-icon">☀️</span>
+      <span style="font-size:24px;color:#f5c842;">☀️</span>
       <h1>Themed Summer</h1>
     </div>
-    <div id="week-list">
-      <div class="empty-state">
-        <span class="big-icon">🌞</span>
-        <p>No themes yet — add your first one!</p>
-      </div></div>
+    <div class="search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Search all themes..." oninput="handleSearch()">
+      <button class="clear-btn" id="search-clear" onclick="clearSearch()" style="display:none;">×</button>
+    </div>
+    <div id="search-results" style="display:none;"></div>
+    <div id="week-list"><div class="empty-state"><span class="big-icon">🌞</span><p>No themes yet — add your first one!</p></div></div>
     <button class="add-btn" onclick="openAddModal()">
       <span style="font-size:20px;">+</span> Add a theme week
     </button>
@@ -208,16 +190,19 @@
     <div class="detail-meta" id="detail-meta"></div>
     <div class="notes-box" id="notes-box"></div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-    <div class="cat-tabs" id="cat-tabs"></div>
+    <div class="cat-tabs-wrap">
+      <div class="cat-tabs" id="cat-tabs"></div>
+    </div>
     <div id="item-list"></div>
     <div class="add-item-row">
       <input type="text" id="new-item-input" placeholder="Add something...">
-      <button onclick="addItem()">Add</button>
+      <button id="add-item-btn" onclick="addItem()">Add</button>
     </div>
   </div>
 
 </div>
 
+<!-- Theme modal -->
 <div class="modal-overlay" id="add-modal">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -233,21 +218,63 @@
       <input type="date" id="modal-start">
       <input type="date" id="modal-end">
     </div>
+    <div class="field-label">Colour</div>
+    <div class="color-picker" id="color-picker"></div>
     <div class="field-label">Notes</div>
     <textarea id="modal-notes" rows="3" placeholder="Theme ideas, reminders..."></textarea>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" onclick="saveTheme()">Save</button>
+      <button class="btn-save" id="modal-save-btn" onclick="saveTheme()">Save</button>
+    </div>
+    <button class="btn-delete" id="modal-delete-btn" onclick="confirmDelete()" style="display:none;">Delete this theme</button>
+  </div>
+</div>
+
+<!-- Confirm delete -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <h3>Delete theme?</h3>
+    <p id="confirm-text">This will permanently remove this theme and all its items.</p>
+    <div class="confirm-btns">
+      <button class="btn-confirm-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-confirm-delete" onclick="deleteTheme()">Delete</button>
     </div>
   </div>
 </div>
 
+<!-- Custom category modal -->
+<div class="cat-modal-overlay" id="cat-modal">
+  <div class="cat-modal">
+    <h3>Categories</h3>
+    <div class="existing-cats" id="existing-cats"></div>
+    <div class="cat-input-row">
+      <input type="text" id="new-cat-input" placeholder="New category name..." maxlength="30">
+      <button id="add-cat-save-btn" onclick="addCustomCat()">Add</button>
+    </div>
+    <button class="cat-modal-close" onclick="closeCatModal()">Done</button>
+  </div>
+</div>
+
 <script>
-const CATS = ['Activities','Books','Movies','Food','Crafts'];
+const DEFAULT_CATS = ['Activities','Books','Movies','Food','Crafts'];
 const CAT_ICONS = {Activities:'🏃',Books:'📚',Movies:'🎬',Food:'🍴',Crafts:'✂️'};
 const STORAGE_KEY = 'themed-summer-v1';
+
+const COLORS = [
+  { name:'violet',  bg:'#2d1a4a', border:'#7c3aed', accent:'#a78bfa', text:'#ddd6fe' },
+  { name:'rose',    bg:'#3a1a2a', border:'#be185d', accent:'#f472b6', text:'#fce7f3' },
+  { name:'sky',     bg:'#0f2a3a', border:'#0369a1', accent:'#38bdf8', text:'#e0f2fe' },
+  { name:'emerald', bg:'#0a2e1a', border:'#047857', accent:'#34d399', text:'#d1fae5' },
+  { name:'amber',   bg:'#2e1e00', border:'#b45309', accent:'#fbbf24', text:'#fef3c7' },
+  { name:'coral',   bg:'#3a1410', border:'#c2410c', accent:'#fb923c', text:'#ffedd5' },
+  { name:'pink',    bg:'#3a0a2e', border:'#9d174d', accent:'#ec4899', text:'#fdf2f8' },
+  { name:'teal',    bg:'#0a2e2a', border:'#0f766e', accent:'#2dd4bf', text:'#ccfbf1' },
+];
+
 let editingId = null;
-let state = { themes: [], activeTheme: null, activeCat: 'Activities', nextId: 1 };
+let selectedColor = COLORS[0];
+let dragSrcIndex = null;
+let state = { themes: [], activeTheme: null, activeCat: 'Activities', nextId: 1, customCats: [] };
 
 function load() {
   try {
@@ -256,11 +283,16 @@ function load() {
   } catch(e) {}
   if (!state.themes) state.themes = [];
   if (!state.nextId) state.nextId = state.themes.length + 1;
+  if (!state.customCats) state.customCats = [];
 }
 
 function save() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
 }
+
+function getAllCats() { return [...DEFAULT_CATS, ...state.customCats]; }
+function getCatIcon(c) { return CAT_ICONS[c] || '📌'; }
+function getColor(n) { return COLORS.find(c=>c.name===n) || COLORS[0]; }
 
 function fmtDate(d) {
   if (!d) return '';
@@ -268,185 +300,310 @@ function fmtDate(d) {
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   return months[parseInt(m)-1] + ' ' + parseInt(day);
 }
-
 function dateDisplay(t) {
   if (t.startDate && t.endDate) return fmtDate(t.startDate) + ' – ' + fmtDate(t.endDate);
   if (t.startDate) return fmtDate(t.startDate);
   return '';
 }
 
-function renderHome() {
-  const sorted = [...state.themes].sort((a,b)=>a.week-b.week);
-  if (!sorted.length) {
-    document.getElementById('week-list').innerHTML = `
-      <div class="empty-state">
-        <span class="big-icon">🌞</span>
-        <p>No themes yet — add your first one!</p>
-      </div>`;
+// ── SEARCH ──────────────────────────────────────────
+function handleSearch() {
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  document.getElementById('search-clear').style.display = q ? 'block' : 'none';
+  const resultsEl = document.getElementById('search-results');
+  const listEl = document.getElementById('week-list');
+  if (!q) { resultsEl.style.display = 'none'; listEl.style.display = 'block'; return; }
+  listEl.style.display = 'none';
+  resultsEl.style.display = 'block';
+  const results = [];
+  state.themes.forEach(t => {
+    getAllCats().forEach(cat => {
+      (t.items[cat]||[]).forEach(item => {
+        if (item.text.toLowerCase().includes(q)) results.push({theme: t, cat, item});
+      });
+    });
+  });
+  if (!results.length) {
+    resultsEl.innerHTML = `<div class="search-empty">No results for "${q}"</div>`;
     return;
   }
-  document.getElementById('week-list').innerHTML = sorted.map(t => {
+  const col_map = {};
+  COLORS.forEach(c => col_map[c.name] = c);
+  resultsEl.innerHTML = '<div class="search-results">' + results.map(r => {
+    const col = getColor(r.theme.color);
+    const highlighted = r.item.text.replace(new RegExp(`(${q})`, 'gi'), `<mark style="color:${col.accent}">$1</mark>`);
+    return `<div class="search-result-item" style="border-left:3px solid ${col.accent};">
+      <div class="search-result-theme" style="color:${col.accent};">${r.theme.emoji} ${r.theme.title} · Week ${r.theme.week}</div>
+      <div class="search-result-cat">${getCatIcon(r.cat)} ${r.cat}</div>
+      <div class="search-result-text">${highlighted}</div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function clearSearch() {
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-clear').style.display = 'none';
+  document.getElementById('search-results').style.display = 'none';
+  document.getElementById('week-list').style.display = 'block';
+}
+
+// ── HOME ─────────────────────────────────────────────
+function renderHome() {
+  const sorted = [...state.themes].sort((a,b)=>a.order-b.order);
+  if (!sorted.length) {
+    document.getElementById('week-list').innerHTML = `<div class="empty-state"><span class="big-icon">🌞</span><p>No themes yet — add your first one!</p></div>`;
+    return;
+  }
+  document.getElementById('week-list').innerHTML = sorted.map((t,idx) => {
     const date = dateDisplay(t);
-    return `<div class="week-card" onclick="openTheme(${t.id})">
-      <div class="week-emoji">${t.emoji||'🌟'}</div>
-      <div class="week-info">
-        <div class="week-num">Week ${t.week}</div>
+    const col = getColor(t.color);
+    return `<div class="week-card" id="card-${t.id}" data-index="${idx}" data-id="${t.id}"
+        style="background:${col.bg};border-left:4px solid ${col.accent};border-top:1px solid ${col.border};border-right:1px solid ${col.border};border-bottom:1px solid ${col.border};"
+        draggable="true"
+        ondragstart="dragStart(event,${idx})" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dragDrop(event,${idx})" ondragend="dragEnd(event)">
+      <div class="drag-handle" style="color:${col.accent};opacity:0.5;">⠿</div>
+      <div class="week-emoji" onclick="openTheme(${t.id})">${t.emoji||'🌟'}</div>
+      <div class="week-info" onclick="openTheme(${t.id})">
+        <div class="week-num" style="color:${col.accent};">Week ${t.week}</div>
         <div class="week-title">${t.title}</div>
-        ${date ? `<div class="week-date">📅 ${date}</div>` : ''}
+        ${date?`<div class="week-date" style="color:${col.text};opacity:0.7;">📅 ${date}</div>`:''}
       </div>
-      <div class="chevron">›</div>
+      <div class="chevron" onclick="openTheme(${t.id})" style="color:${col.accent};opacity:0.5;">›</div>
     </div>`;
   }).join('');
 }
 
+// ── DRAG ─────────────────────────────────────────────
+function dragStart(e,idx) { dragSrcIndex=idx; e.currentTarget.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; }
+function dragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect='move'; e.currentTarget.classList.add('drag-over'); }
+function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function dragEnd(e) { e.currentTarget.classList.remove('dragging'); }
+function dragDrop(e,dropIdx) {
+  e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+  if (dragSrcIndex===null||dragSrcIndex===dropIdx) return;
+  const sorted=[...state.themes].sort((a,b)=>a.order-b.order);
+  const moved=sorted.splice(dragSrcIndex,1)[0];
+  sorted.splice(dropIdx,0,moved);
+  sorted.forEach((t,i)=>{ t.order=i; });
+  state.themes=sorted; dragSrcIndex=null;
+  save(); renderHome();
+}
+
+// ── DETAIL ───────────────────────────────────────────
 function openTheme(id) {
   state.activeTheme = state.themes.find(t=>t.id===id);
-  state.activeCat = 'Activities';
-  document.getElementById('detail-title').textContent = state.activeTheme.emoji + ' ' + state.activeTheme.title;
-  renderDetailMeta();
-  renderNotes();
-  renderCatTabs();
-  renderItems();
-  updateProgress();
+  state.activeCat = getAllCats()[0];
+  const col = getColor(state.activeTheme.color);
+  document.getElementById('detail-title').textContent = state.activeTheme.emoji+' '+state.activeTheme.title;
+  document.getElementById('progress-fill').style.background = col.accent;
+  document.getElementById('add-item-btn').style.background = col.accent;
+  renderDetailMeta(); renderNotes(); renderCatTabs(); renderItems(); updateProgress();
   document.getElementById('home-screen').classList.remove('active');
   document.getElementById('detail-screen').classList.add('active');
   window.scrollTo(0,0);
 }
 
 function renderDetailMeta() {
-  const t = state.activeTheme;
-  const date = dateDisplay(t) || 'No dates set';
-  document.getElementById('detail-meta').innerHTML = `📅 ${date}`;
+  const t=state.activeTheme, col=getColor(t.color);
+  const el=document.getElementById('detail-meta');
+  el.style.background=col.bg; el.style.color=col.text;
+  el.innerHTML=`📅 ${dateDisplay(t)||'No dates set'}`;
 }
 
 function renderNotes() {
-  const t = state.activeTheme;
-  document.getElementById('notes-box').innerHTML = `
+  const t=state.activeTheme;
+  document.getElementById('notes-box').innerHTML=`
     <div class="notes-label">NOTES</div>
     <textarea rows="2" placeholder="Add theme notes or ideas..." onchange="updateNotes(this.value)">${t.notes||''}</textarea>`;
 }
 
-function updateNotes(val) { state.activeTheme.notes = val; save(); }
+function updateNotes(val) { state.activeTheme.notes=val; save(); }
 
 function renderCatTabs() {
-  document.getElementById('cat-tabs').innerHTML = CATS.map(c => {
-    const count = state.activeTheme.items[c] ? state.activeTheme.items[c].length : 0;
-    return `<button class="cat-tab${c===state.activeCat?' active':''}" onclick="switchCat('${c}')">${CAT_ICONS[c]} ${c}${count?' ('+count+')':''}</button>`;
+  const col=getColor(state.activeTheme.color);
+  const tabs=getAllCats().map(c=>{
+    const count=(state.activeTheme.items[c]||[]).length;
+    const active=c===state.activeCat;
+    return `<button class="cat-tab${active?' active':''}"
+      style="${active?`background:${col.accent};color:#fff;border-color:${col.accent};`:''}"
+      onclick="switchCat('${c}')">${getCatIcon(c)} ${c}${count?' ('+count+')':''}</button>`;
   }).join('');
+  document.getElementById('cat-tabs').innerHTML = tabs +
+    `<button class="add-cat-btn" onclick="openCatModal()" title="Manage categories">+ cat</button>`;
 }
 
-function switchCat(cat) { state.activeCat = cat; renderCatTabs(); renderItems(); }
+function switchCat(cat) { state.activeCat=cat; renderCatTabs(); renderItems(); }
 
 function renderItems() {
-  const items = (state.activeTheme.items[state.activeCat]||[]);
-  const el = document.getElementById('item-list');
+  const items=(state.activeTheme.items[state.activeCat]||[]);
+  const el=document.getElementById('item-list');
+  const col=getColor(state.activeTheme.color);
   if (!items.length) {
-    el.innerHTML = `<div class="empty-state"><span class="big-icon">${CAT_ICONS[state.activeCat]}</span><p>No ${state.activeCat.toLowerCase()} yet</p></div>`;
+    el.innerHTML=`<div class="empty-state"><span class="big-icon">${getCatIcon(state.activeCat)}</span><p>No ${state.activeCat.toLowerCase()} yet</p></div>`;
     return;
   }
-  el.innerHTML = items.map((item,i)=>`
+  el.innerHTML=items.map((item,i)=>`
     <div class="item-row">
-      <button class="item-check${item.done?' done':''}" onclick="toggleItem(${i})">${item.done?'✓':''}</button>
+      <button class="item-check${item.done?' done':''}" onclick="toggleItem(${i})"
+        style="${item.done?`border-color:${col.accent};color:${col.accent};`:''}">${item.done?'✓':''}</button>
       <span class="item-text${item.done?' done':''}">${item.text}</span>
       <button class="item-del" onclick="deleteItem(${i})">×</button>
     </div>`).join('');
 }
 
-function toggleItem(i) {
-  state.activeTheme.items[state.activeCat][i].done = !state.activeTheme.items[state.activeCat][i].done;
-  save(); renderItems(); renderCatTabs(); updateProgress();
-}
-
-function deleteItem(i) {
-  state.activeTheme.items[state.activeCat].splice(i,1);
-  save(); renderItems(); renderCatTabs(); updateProgress();
-}
-
+function toggleItem(i) { state.activeTheme.items[state.activeCat][i].done=!state.activeTheme.items[state.activeCat][i].done; save(); renderItems(); renderCatTabs(); updateProgress(); }
+function deleteItem(i) { state.activeTheme.items[state.activeCat].splice(i,1); save(); renderItems(); renderCatTabs(); updateProgress(); }
 function addItem() {
-  const input = document.getElementById('new-item-input');
-  const text = input.value.trim();
-  if (!text) return;
-  if (!state.activeTheme.items[state.activeCat]) state.activeTheme.items[state.activeCat] = [];
-  state.activeTheme.items[state.activeCat].push({text, done:false});
-  input.value = '';
-  save(); renderItems(); renderCatTabs(); updateProgress();
+  const input=document.getElementById('new-item-input');
+  const text=input.value.trim(); if (!text) return;
+  if (!state.activeTheme.items[state.activeCat]) state.activeTheme.items[state.activeCat]=[];
+  state.activeTheme.items[state.activeCat].push({text,done:false});
+  input.value=''; save(); renderItems(); renderCatTabs(); updateProgress();
 }
-
-document.getElementById('new-item-input').addEventListener('keydown', e => { if(e.key==='Enter') addItem(); });
+document.getElementById('new-item-input').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
 
 function updateProgress() {
-  const all = Object.values(state.activeTheme.items).flat();
-  const pct = all.length ? Math.round(all.filter(i=>i.done).length/all.length*100) : 0;
-  document.getElementById('progress-fill').style.width = pct+'%';
+  const all=Object.values(state.activeTheme.items).flat();
+  const pct=all.length?Math.round(all.filter(i=>i.done).length/all.length*100):0;
+  document.getElementById('progress-fill').style.width=pct+'%';
 }
 
 function goHome() {
   document.getElementById('detail-screen').classList.remove('active');
   document.getElementById('home-screen').classList.add('active');
-  window.scrollTo(0,0);
-  renderHome();
+  window.scrollTo(0,0); renderHome();
+}
+
+// ── CUSTOM CATEGORIES ────────────────────────────────
+function openCatModal() {
+  renderExistingCats();
+  const col=getColor(state.activeTheme.color);
+  document.getElementById('add-cat-save-btn').style.background=col.accent;
+  document.getElementById('new-cat-input').value='';
+  document.getElementById('cat-modal').classList.add('open');
+}
+
+function closeCatModal() {
+  document.getElementById('cat-modal').classList.remove('open');
+  renderCatTabs(); renderItems();
+}
+
+function renderExistingCats() {
+  const all=getAllCats();
+  document.getElementById('existing-cats').innerHTML=all.map(c=>`
+    <div class="existing-cat-row">
+      <span>${getCatIcon(c)} ${c}${DEFAULT_CATS.includes(c)?'<span class="default-badge">(default)</span>':''}</span>
+      ${!DEFAULT_CATS.includes(c)?`<button class="del-cat-btn" onclick="deleteCustomCat('${c}')">×</button>`:''}
+    </div>`).join('');
+}
+
+function addCustomCat() {
+  const input=document.getElementById('new-cat-input');
+  const name=input.value.trim();
+  if (!name) return;
+  if (getAllCats().map(c=>c.toLowerCase()).includes(name.toLowerCase())) { input.select(); return; }
+  state.customCats.push(name);
+  input.value='';
+  save(); renderExistingCats();
+}
+document.getElementById('new-cat-input').addEventListener('keydown',e=>{ if(e.key==='Enter') addCustomCat(); });
+
+function deleteCustomCat(name) {
+  state.customCats=state.customCats.filter(c=>c!==name);
+  if (state.activeCat===name) state.activeCat=getAllCats()[0]||DEFAULT_CATS[0];
+  save(); renderExistingCats();
+}
+
+// ── THEME MODAL ───────────────────────────────────────
+function buildColorPicker(current) {
+  document.getElementById('color-picker').innerHTML=COLORS.map(c=>`
+    <div class="color-swatch ${c.name===current?'selected':''}" style="background:${c.accent};" onclick="selectColor('${c.name}')" title="${c.name}"></div>`).join('');
+}
+function selectColor(name) {
+  selectedColor=getColor(name);
+  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('selected',s.title===name));
+  document.getElementById('modal-save-btn').style.background=selectedColor.accent;
 }
 
 function openAddModal() {
-  editingId = null;
-  document.getElementById('modal-heading').textContent = 'New theme week';
+  editingId=null;
+  selectedColor=COLORS[state.themes.length%COLORS.length];
+  document.getElementById('modal-heading').textContent='New theme week';
   ['modal-title','modal-emoji','modal-notes'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('modal-week').value = state.themes.length + 1;
+  document.getElementById('modal-week').value=state.themes.length+1;
   document.getElementById('modal-start').value='';
   document.getElementById('modal-end').value='';
+  document.getElementById('modal-delete-btn').style.display='none';
+  document.getElementById('modal-save-btn').style.background=selectedColor.accent;
+  buildColorPicker(selectedColor.name);
   document.getElementById('add-modal').classList.add('open');
-  setTimeout(()=>document.getElementById('modal-title').focus(), 100);
+  setTimeout(()=>document.getElementById('modal-title').focus(),100);
 }
 
 function openEditModal() {
-  const t = state.activeTheme;
-  editingId = t.id;
-  document.getElementById('modal-heading').textContent = 'Edit theme';
-  document.getElementById('modal-title').value = t.title;
-  document.getElementById('modal-emoji').value = t.emoji||'';
-  document.getElementById('modal-week').value = t.week;
-  document.getElementById('modal-start').value = t.startDate||'';
-  document.getElementById('modal-end').value = t.endDate||'';
-  document.getElementById('modal-notes').value = t.notes||'';
+  const t=state.activeTheme; editingId=t.id; selectedColor=getColor(t.color);
+  document.getElementById('modal-heading').textContent='Edit theme';
+  document.getElementById('modal-title').value=t.title;
+  document.getElementById('modal-emoji').value=t.emoji||'';
+  document.getElementById('modal-week').value=t.week;
+  document.getElementById('modal-start').value=t.startDate||'';
+  document.getElementById('modal-end').value=t.endDate||'';
+  document.getElementById('modal-notes').value=t.notes||'';
+  document.getElementById('modal-delete-btn').style.display='block';
+  document.getElementById('modal-save-btn').style.background=selectedColor.accent;
+  buildColorPicker(selectedColor.name);
   document.getElementById('add-modal').classList.add('open');
 }
 
 function closeModal() { document.getElementById('add-modal').classList.remove('open'); }
-
-document.getElementById('add-modal').addEventListener('click', e => {
-  if (e.target === document.getElementById('add-modal')) closeModal();
-});
+document.getElementById('add-modal').addEventListener('click',e=>{ if(e.target===document.getElementById('add-modal')) closeModal(); });
 
 function saveTheme() {
-  const title = document.getElementById('modal-title').value.trim();
+  const title=document.getElementById('modal-title').value.trim();
   if (!title) { document.getElementById('modal-title').focus(); return; }
-  const emoji = document.getElementById('modal-emoji').value.trim() || '🌟';
-  const week = parseInt(document.getElementById('modal-week').value) || state.themes.length + 1;
-  const startDate = document.getElementById('modal-start').value;
-  const endDate = document.getElementById('modal-end').value;
-  const notes = document.getElementById('modal-notes').value.trim();
-
+  const emoji=document.getElementById('modal-emoji').value.trim()||'🌟';
+  const week=parseInt(document.getElementById('modal-week').value)||state.themes.length+1;
+  const startDate=document.getElementById('modal-start').value;
+  const endDate=document.getElementById('modal-end').value;
+  const notes=document.getElementById('modal-notes').value.trim();
+  const color=selectedColor.name;
   if (editingId) {
-    const t = state.themes.find(t=>t.id===editingId);
-    Object.assign(t, {title, emoji, week, startDate, endDate, notes});
-    state.activeTheme = t;
-    closeModal();
-    document.getElementById('detail-title').textContent = t.emoji + ' ' + t.title;
-    renderDetailMeta();
+    const t=state.themes.find(t=>t.id===editingId);
+    Object.assign(t,{title,emoji,week,startDate,endDate,notes,color});
+    state.activeTheme=t; closeModal();
+    document.getElementById('detail-title').textContent=t.emoji+' '+t.title;
+    const col=getColor(color);
+    document.getElementById('progress-fill').style.background=col.accent;
+    document.getElementById('add-item-btn').style.background=col.accent;
+    renderDetailMeta(); renderCatTabs();
   } else {
-    const newTheme = {
-      id: state.nextId++, title, emoji, week, startDate, endDate, notes,
-      items: {Activities:[], Books:[], Movies:[], Food:[], Crafts:[]}
-    };
-    state.themes.push(newTheme);
-    closeModal();
-    renderHome();
+    const cats={};
+    getAllCats().forEach(c=>cats[c]=[]);
+    state.themes.push({id:state.nextId++,title,emoji,week,startDate,endDate,notes,color,order:state.themes.length,items:cats});
+    closeModal(); renderHome();
   }
   save();
 }
 
-load();
-renderHome();
+function confirmDelete() {
+  const t=state.themes.find(t=>t.id===editingId);
+  document.getElementById('confirm-text').textContent=`"${t.title}" and all its items will be permanently removed.`;
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+function closeConfirm() { document.getElementById('confirm-overlay').classList.remove('open'); }
+function deleteTheme() {
+  state.themes=state.themes.filter(t=>t.id!==editingId);
+  closeConfirm(); closeModal();
+  document.getElementById('detail-screen').classList.remove('active');
+  document.getElementById('home-screen').classList.add('active');
+  save(); renderHome();
+}
+
+function fixOrder() {
+  state.themes.forEach((t,i)=>{ if(t.order===undefined) t.order=i; if(!t.color) t.color=COLORS[i%COLORS.length].name; });
+}
+
+load(); fixOrder(); renderHome();
 </script>
 
 
