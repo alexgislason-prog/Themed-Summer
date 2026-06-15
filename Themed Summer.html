@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///Users/alexgislason/Downloads/index_9.html -->
+<!-- saved from url=(0050)file:///Users/alexgislason/Downloads/index_10.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -243,12 +243,10 @@
     </div>
 
     <div class="photo-section" id="photo-section">
+      <input type="file" id="photo-input" accept="image/*" multiple="" style="display:none;" onchange="handlePhotoUpload(event)">
       <div class="photo-section-header">
         <span class="notes-label">PHOTOS</span>
-        <label class="add-photo-btn" id="add-photo-label">
-          <input type="file" id="photo-input" accept="image/*" multiple="" style="display:none;" onchange="handlePhotoUpload(event)">
-          + Add Photos
-        </label>
+        <button class="add-photo-btn" id="add-photo-label" onclick="document.getElementById(&#39;photo-input&#39;).click()">+ Add Photos</button>
       </div>
       <div class="photo-grid" id="photo-grid"></div>
     </div>
@@ -312,7 +310,7 @@
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">×</button>
-  <img id="lightbox-img" src="file:///Users/alexgislason/Downloads/index_9.html" alt="Photo">
+  <img id="lightbox-img" src="file:///Users/alexgislason/Downloads/index_10.html" alt="Photo">
 </div>
 
 <script>
