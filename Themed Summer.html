@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///Users/alexgislason/Downloads/index_7.html -->
+<!-- saved from url=(0049)file:///Users/alexgislason/Downloads/index_9.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -161,6 +161,23 @@
   .del-cat-btn { background: none; border: none; color: #4a2870; font-size: 18px; cursor: pointer; }
   .del-cat-btn:hover { color: #e05a5a; }
   .cat-modal-close { width: 100%; padding: 12px; border-radius: 10px; background: #2d1550; border: none; color: #9b7fc7; font-size: 15px; cursor: pointer; font-family: inherit; }
+
+  /* Photos */
+  .photo-section { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #2d1550; }
+  .photo-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+  .add-photo-btn { font-size: 13px; padding: 6px 14px; border-radius: 20px; border: 1px solid #3a1f5e; color: #9b7fc7; cursor: pointer; font-family: inherit; background: none; }
+  .add-photo-btn:hover { border-color: #6b3fa0; color: #f0eaff; }
+  .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .photo-thumb { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; background: #241040; }
+  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer; }
+  .photo-del { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,0.6); border: none; border-radius: 50%; width: 22px; height: 22px; color: #fff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; }
+  .photo-empty { color: #4a2870; font-size: 13px; text-align: center; padding: 1rem 0; grid-column: span 3; }
+
+  /* Lightbox */
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 300; align-items: center; justify-content: center; padding: 1rem; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 90vh; border-radius: 10px; object-fit: contain; }
+  .lightbox-close { position: absolute; top: 1rem; right: 1rem; background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 24px; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 </style>
 </head>
 <body>
@@ -224,6 +241,17 @@
       <input type="text" id="new-item-input" placeholder="Add something...">
       <button id="add-item-btn" onclick="addItem()">Add</button>
     </div>
+
+    <div class="photo-section" id="photo-section">
+      <div class="photo-section-header">
+        <span class="notes-label">PHOTOS</span>
+        <label class="add-photo-btn" id="add-photo-label">
+          <input type="file" id="photo-input" accept="image/*" multiple="" style="display:none;" onchange="handlePhotoUpload(event)">
+          + Add Photos
+        </label>
+      </div>
+      <div class="photo-grid" id="photo-grid"></div>
+    </div>
   </div>
 
 </div>
@@ -279,6 +307,12 @@
     </div>
     <button class="cat-modal-close" onclick="closeCatModal()">Done</button>
   </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <img id="lightbox-img" src="file:///Users/alexgislason/Downloads/index_9.html" alt="Photo">
 </div>
 
 <script>
@@ -429,7 +463,7 @@ function openTheme(id) {
   document.getElementById('detail-title').textContent = state.activeTheme.emoji+' '+state.activeTheme.title;
   document.getElementById('progress-fill').style.background = col.accent;
   document.getElementById('add-item-btn').style.background = col.accent;
-  renderDetailMeta(); renderNotes(); renderCatTabs(); renderItems(); updateProgress();
+  renderDetailMeta(); renderNotes(); renderCatTabs(); renderItems(); renderPhotos(); updateProgress();
   document.getElementById('home-screen').classList.remove('active');
   document.getElementById('detail-screen').classList.add('active');
   window.scrollTo(0,0);
@@ -633,6 +667,56 @@ function deleteTheme() {
 
 function fixOrder() {
   state.themes.forEach((t,i)=>{ if(t.order===undefined) t.order=i; if(!t.color) t.color=COLORS[i%COLORS.length].name; });
+}
+
+// ── PHOTOS ───────────────────────────────────────────
+function handlePhotoUpload(e) {
+  const files = [...e.target.files];
+  if (!files.length) return;
+  if (!state.activeTheme.photos) state.activeTheme.photos = [];
+  let loaded = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      state.activeTheme.photos.push(ev.target.result);
+      loaded++;
+      if (loaded === files.length) { save(); renderPhotos(); }
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value = '';
+}
+
+function renderPhotos() {
+  const photos = state.activeTheme.photos || [];
+  const col = getColor(state.activeTheme.color);
+  document.getElementById('add-photo-label').style.color = col.accent;
+  document.getElementById('add-photo-label').style.borderColor = col.border;
+  const grid = document.getElementById('photo-grid');
+  if (!photos.length) {
+    grid.innerHTML = `<div class="photo-empty">No photos yet — tap Add Photos to get started</div>`;
+    return;
+  }
+  grid.innerHTML = photos.map((src, i) => `
+    <div class="photo-thumb">
+      <img src="${src}" alt="Photo ${i+1}" onclick="openLightbox(${i})" />
+      <button class="photo-del" onclick="deletePhoto(${i})">×</button>
+    </div>`).join('');
+}
+
+function deletePhoto(i) {
+  state.activeTheme.photos.splice(i, 1);
+  save(); renderPhotos();
+}
+
+function openLightbox(i) {
+  document.getElementById('lightbox-img').src = state.activeTheme.photos[i];
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightbox-img').src = '';
 }
 
 load(); fixOrder(); renderHome();
