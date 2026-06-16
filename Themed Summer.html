@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0050)file:///Users/alexgislason/Downloads/index_10.html -->
+<!-- saved from url=(0050)file:///Users/alexgislason/Downloads/index_11.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -86,31 +86,25 @@
   .progress-bar { height: 5px; background: #2d1550; border-radius: 3px; margin-bottom: 1.25rem; overflow: hidden; }
   .progress-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
 
-  .cat-tabs-wrap { margin-bottom: 1rem; }
-  .cat-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
-  .cat-tabs::-webkit-scrollbar { display: none; }
-  .cat-tab { flex-shrink: 0; padding: 6px 14px; border-radius: 20px; font-size: 13px; border: 1px solid #3a1f5e; background: none; cursor: pointer; color: #9b7fc7; white-space: nowrap; font-family: inherit; }
-  .cat-tab.active { color: #fff; border-color: transparent; }
-  .add-cat-btn { flex-shrink: 0; padding: 6px 12px; border-radius: 20px; font-size: 13px; border: 1px dashed #3a1f5e; background: none; cursor: pointer; color: #4a2870; white-space: nowrap; font-family: inherit; }
-  .add-cat-btn:hover { border-color: #6b3fa0; color: #9b7fc7; }
-
-  .item-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #2d1550; }
-  .item-check { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #4a2870; background: none; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: transparent; transition: all 0.15s; }
-  .item-check.done { background: #2d1550; color: #c084fc; border-color: #c084fc; }
-  .item-text { flex: 1; font-size: 15px; color: #f0eaff; }
-  .item-text.done { text-decoration: line-through; color: #4a2870; }
-  .item-del { background: none; border: none; cursor: pointer; color: #4a2870; font-size: 18px; padding: 0 4px; transition: color 0.15s; }
-  .item-del:hover { color: #e05a5a; }
-
-  .empty-state { text-align: center; padding: 2.5rem 1rem; color: #4a2870; }
-  .empty-state .big-icon { font-size: 40px; display: block; margin-bottom: 10px; }
-  .empty-state p { font-size: 14px; }
-
-  .add-item-row { display: flex; gap: 8px; margin-top: 12px; }
-  .add-item-row input { flex: 1; font-size: 15px; padding: 10px 14px; border: 1px solid #3a1f5e; border-radius: 10px; background: #241040; color: #f0eaff; font-family: inherit; }
-  .add-item-row input:focus { outline: none; border-color: #6b3fa0; }
-  .add-item-row input::placeholder { color: #4a2870; }
-  .add-item-row button { padding: 10px 18px; color: #fff; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; font-family: inherit; font-weight: 500; }
+  /* Stacked category sections */
+  .cat-section { margin-bottom: 1.25rem; }
+  .cat-section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .cat-section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+  .cat-section-body { border-radius: 12px; overflow: hidden; }
+  .cat-item-row { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-bottom: 1px solid #1a0a2e; }
+  .cat-item-row:last-child { border-bottom: none; }
+  .cat-item-check { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid #4a2870; background: none; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: transparent; transition: all 0.15s; }
+  .cat-item-check.done { color: inherit; }
+  .cat-item-text { flex: 1; font-size: 14px; color: #f0eaff; }
+  .cat-item-text.done { text-decoration: line-through; color: #4a2870; }
+  .cat-item-del { background: none; border: none; cursor: pointer; color: #4a2870; font-size: 16px; padding: 0 4px; }
+  .cat-item-del:hover { color: #e05a5a; }
+  .cat-add-row { display: flex; gap: 6px; margin-top: 6px; }
+  .cat-add-row input { flex: 1; font-size: 14px; padding: 8px 12px; border: 1px solid #3a1f5e; border-radius: 10px; background: #241040; color: #f0eaff; font-family: inherit; }
+  .cat-add-row input:focus { outline: none; }
+  .cat-add-row input::placeholder { color: #4a2870; }
+  .cat-add-row button { padding: 8px 14px; color: #fff; border: none; border-radius: 10px; font-size: 13px; cursor: pointer; font-family: inherit; font-weight: 500; white-space: nowrap; }
+  .manage-cats-btn { font-size: 12px; color: #4a2870; background: none; border: none; cursor: pointer; font-family: inherit; text-decoration: underline; margin-bottom: 0.5rem; display: block; }
 
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; align-items: flex-end; justify-content: center; padding-bottom: env(safe-area-inset-bottom); }
   .modal-overlay.open { display: flex; }
@@ -183,7 +177,7 @@
 <body>
 <div class="app" id="app">
 
-  <div class="screen active" id="home-screen">
+  <div class="screen" id="home-screen">
     <div class="header">
       <span style="font-size:24px;color:#f5c842;">☀️</span>
       <h1>Themed Summer</h1>
@@ -224,31 +218,77 @@
     </button>
   </div>
 
-  <div class="screen" id="detail-screen">
+  <div class="screen active" id="detail-screen">
     <div class="header">
       <button class="icon-btn" onclick="goHome()" aria-label="Back">←</button>
-      <h1 id="detail-title"></h1>
+      <h1 id="detail-title">🌟 beach</h1>
       <button class="icon-btn" onclick="openEditModal()" aria-label="Edit">✎</button>
     </div>
-    <div class="detail-meta" id="detail-meta"></div>
-    <div class="notes-box" id="notes-box"></div>
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-    <div class="cat-tabs-wrap">
-      <div class="cat-tabs" id="cat-tabs"></div>
-    </div>
-    <div id="item-list"></div>
-    <div class="add-item-row">
-      <input type="text" id="new-item-input" placeholder="Add something...">
-      <button id="add-item-btn" onclick="addItem()">Add</button>
-    </div>
+    <div class="detail-meta" id="detail-meta" style="background: rgb(45, 26, 74); color: rgb(221, 214, 254);">📅 No dates set</div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 0%; background: rgb(167, 139, 250);"></div></div>
+    <div id="all-sections"><button class="manage-cats-btn" onclick="openCatModal()">+ manage categories</button>
+      <div class="cat-section" id="section-Activities">
+        <div class="cat-section-header">
+          <div class="cat-section-title" style="color:#a78bfa;">🏃 Activities</div>
+        </div>
+        
+        <div class="cat-add-row">
+          <input type="text" id="input-Activities" placeholder="Add activities..." onkeydown="if(event.key===&#39;Enter&#39;)addItem(&#39;Activities&#39;)">
+          <button style="background:#a78bfa;" onclick="addItem(&#39;Activities&#39;)">Add</button>
+        </div>
+      </div>
+      <div class="cat-section" id="section-Books">
+        <div class="cat-section-header">
+          <div class="cat-section-title" style="color:#a78bfa;">📚 Books</div>
+        </div>
+        
+        <div class="cat-add-row">
+          <input type="text" id="input-Books" placeholder="Add books..." onkeydown="if(event.key===&#39;Enter&#39;)addItem(&#39;Books&#39;)">
+          <button style="background:#a78bfa;" onclick="addItem(&#39;Books&#39;)">Add</button>
+        </div>
+      </div>
+      <div class="cat-section" id="section-Movies">
+        <div class="cat-section-header">
+          <div class="cat-section-title" style="color:#a78bfa;">🎬 Movies</div>
+        </div>
+        
+        <div class="cat-add-row">
+          <input type="text" id="input-Movies" placeholder="Add movies..." onkeydown="if(event.key===&#39;Enter&#39;)addItem(&#39;Movies&#39;)">
+          <button style="background:#a78bfa;" onclick="addItem(&#39;Movies&#39;)">Add</button>
+        </div>
+      </div>
+      <div class="cat-section" id="section-Food">
+        <div class="cat-section-header">
+          <div class="cat-section-title" style="color:#a78bfa;">🍴 Food</div>
+        </div>
+        
+        <div class="cat-add-row">
+          <input type="text" id="input-Food" placeholder="Add food..." onkeydown="if(event.key===&#39;Enter&#39;)addItem(&#39;Food&#39;)">
+          <button style="background:#a78bfa;" onclick="addItem(&#39;Food&#39;)">Add</button>
+        </div>
+      </div>
+      <div class="cat-section" id="section-Crafts">
+        <div class="cat-section-header">
+          <div class="cat-section-title" style="color:#a78bfa;">✂️ Crafts</div>
+        </div>
+        
+        <div class="cat-add-row">
+          <input type="text" id="input-Crafts" placeholder="Add crafts..." onkeydown="if(event.key===&#39;Enter&#39;)addItem(&#39;Crafts&#39;)">
+          <button style="background:#a78bfa;" onclick="addItem(&#39;Crafts&#39;)">Add</button>
+        </div>
+      </div></div>
+
+    <div class="notes-box" id="notes-box" style="margin-top:1rem;">
+    <div class="notes-label">NOTES</div>
+    <textarea rows="2" placeholder="Add theme notes or ideas..." onchange="updateNotes(this.value)"></textarea></div>
 
     <div class="photo-section" id="photo-section">
       <input type="file" id="photo-input" accept="image/*" multiple="" style="display:none;" onchange="handlePhotoUpload(event)">
       <div class="photo-section-header">
         <span class="notes-label">PHOTOS</span>
-        <button class="add-photo-btn" id="add-photo-label" onclick="document.getElementById(&#39;photo-input&#39;).click()">+ Add Photos</button>
+        <button class="add-photo-btn" id="add-photo-label" onclick="document.getElementById(&#39;photo-input&#39;).click()" style="color: rgb(167, 139, 250); border-color: rgb(124, 58, 237);">+ Add Photos</button>
       </div>
-      <div class="photo-grid" id="photo-grid"></div>
+      <div class="photo-grid" id="photo-grid"><div class="photo-empty">No photos yet — tap Add Photos to get started</div></div>
     </div>
   </div>
 
@@ -310,7 +350,7 @@
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">×</button>
-  <img id="lightbox-img" src="file:///Users/alexgislason/Downloads/index_10.html" alt="Photo">
+  <img id="lightbox-img" src="file:///Users/alexgislason/Downloads/index_11.html" alt="Photo">
 </div>
 
 <script>
@@ -456,12 +496,10 @@ function reorder(fromIdx, toIdx) {
 // ── DETAIL ───────────────────────────────────────────
 function openTheme(id) {
   state.activeTheme = state.themes.find(t=>t.id===id);
-  state.activeCat = getAllCats()[0];
   const col = getColor(state.activeTheme.color);
   document.getElementById('detail-title').textContent = state.activeTheme.emoji+' '+state.activeTheme.title;
   document.getElementById('progress-fill').style.background = col.accent;
-  document.getElementById('add-item-btn').style.background = col.accent;
-  renderDetailMeta(); renderNotes(); renderCatTabs(); renderItems(); renderPhotos(); updateProgress();
+  renderDetailMeta(); renderNotes(); renderAllSections(); renderPhotos(); updateProgress();
   document.getElementById('home-screen').classList.remove('active');
   document.getElementById('detail-screen').classList.add('active');
   window.scrollTo(0,0);
@@ -483,53 +521,65 @@ function renderNotes() {
 
 function updateNotes(val) { state.activeTheme.notes=val; save(); }
 
-function renderCatTabs() {
-  const col=getColor(state.activeTheme.color);
-  const tabs=getAllCats().map(c=>{
-    const count=(state.activeTheme.items[c]||[]).length;
-    const active=c===state.activeCat;
-    return `<button class="cat-tab${active?' active':''}"
-      style="${active?`background:${col.accent};color:#fff;border-color:${col.accent};`:''}"
-      onclick="switchCat('${c}')">${getCatIcon(c)} ${c}${count?' ('+count+')':''}</button>`;
-  }).join('');
-  document.getElementById('cat-tabs').innerHTML = tabs +
-    `<button class="add-cat-btn" onclick="openCatModal()" title="Manage categories">+ cat</button>`;
+function renderAllSections() {
+  const col = getColor(state.activeTheme.color);
+  const cats = getAllCats();
+  let html = `<button class="manage-cats-btn" onclick="openCatModal()">+ manage categories</button>`;
+  cats.forEach(cat => {
+    const items = state.activeTheme.items[cat] || [];
+    const itemsHtml = items.length
+      ? `<div class="cat-section-body" style="background:${col.bg};">`
+        + items.map((item,i) => `
+          <div class="cat-item-row">
+            <button class="cat-item-check${item.done?' done':''}" onclick="toggleItem('${cat}',${i})"
+              style="border-color:${item.done?col.accent:'#4a2870'};${item.done?`background:#2d1550;color:${col.accent};`:''}">
+              ${item.done?'✓':''}
+            </button>
+            <span class="cat-item-text${item.done?' done':''}">${item.text}</span>
+            <button class="cat-item-del" onclick="deleteItem('${cat}',${i})">×</button>
+          </div>`).join('')
+        + `</div>`
+      : '';
+    html += `
+      <div class="cat-section" id="section-${cat}">
+        <div class="cat-section-header">
+          <div class="cat-section-title" style="color:${col.accent};">${getCatIcon(cat)} ${cat}</div>
+        </div>
+        ${itemsHtml}
+        <div class="cat-add-row">
+          <input type="text" id="input-${cat}" placeholder="Add ${cat.toLowerCase()}..." onkeydown="if(event.key==='Enter')addItem('${cat}')" />
+          <button style="background:${col.accent};" onclick="addItem('${cat}')">Add</button>
+        </div>
+      </div>`;
+  });
+  document.getElementById('all-sections').innerHTML = html;
 }
 
-function switchCat(cat) { state.activeCat=cat; renderCatTabs(); renderItems(); }
-
-function renderItems() {
-  const items=(state.activeTheme.items[state.activeCat]||[]);
-  const el=document.getElementById('item-list');
-  const col=getColor(state.activeTheme.color);
-  if (!items.length) {
-    el.innerHTML=`<div class="empty-state"><span class="big-icon">${getCatIcon(state.activeCat)}</span><p>No ${state.activeCat.toLowerCase()} yet</p></div>`;
-    return;
-  }
-  el.innerHTML=items.map((item,i)=>`
-    <div class="item-row">
-      <button class="item-check${item.done?' done':''}" onclick="toggleItem(${i})"
-        style="${item.done?`border-color:${col.accent};color:${col.accent};`:''}">${item.done?'✓':''}</button>
-      <span class="item-text${item.done?' done':''}">${item.text}</span>
-      <button class="item-del" onclick="deleteItem(${i})">×</button>
-    </div>`).join('');
+function toggleItem(cat, i) {
+  if (!state.activeTheme.items[cat]) return;
+  state.activeTheme.items[cat][i].done = !state.activeTheme.items[cat][i].done;
+  save(); renderAllSections(); updateProgress();
 }
 
-function toggleItem(i) { state.activeTheme.items[state.activeCat][i].done=!state.activeTheme.items[state.activeCat][i].done; save(); renderItems(); renderCatTabs(); updateProgress(); }
-function deleteItem(i) { state.activeTheme.items[state.activeCat].splice(i,1); save(); renderItems(); renderCatTabs(); updateProgress(); }
-function addItem() {
-  const input=document.getElementById('new-item-input');
-  const text=input.value.trim(); if (!text) return;
-  if (!state.activeTheme.items[state.activeCat]) state.activeTheme.items[state.activeCat]=[];
-  state.activeTheme.items[state.activeCat].push({text,done:false});
-  input.value=''; save(); renderItems(); renderCatTabs(); updateProgress();
+function deleteItem(cat, i) {
+  state.activeTheme.items[cat].splice(i,1);
+  save(); renderAllSections(); updateProgress();
 }
-document.getElementById('new-item-input').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
+
+function addItem(cat) {
+  const input = document.getElementById(`input-${cat}`);
+  const text = input.value.trim(); if (!text) return;
+  if (!state.activeTheme.items[cat]) state.activeTheme.items[cat] = [];
+  state.activeTheme.items[cat].push({text, done:false});
+  save(); renderAllSections(); updateProgress();
+  // re-focus the input after re-render
+  setTimeout(() => { const el = document.getElementById(`input-${cat}`); if(el) el.focus(); }, 50);
+}
 
 function updateProgress() {
-  const all=Object.values(state.activeTheme.items).flat();
-  const pct=all.length?Math.round(all.filter(i=>i.done).length/all.length*100):0;
-  document.getElementById('progress-fill').style.width=pct+'%';
+  const all = Object.values(state.activeTheme.items).flat();
+  const pct = all.length ? Math.round(all.filter(i=>i.done).length/all.length*100) : 0;
+  document.getElementById('progress-fill').style.width = pct+'%';
 }
 
 function goHome() {
@@ -549,7 +599,7 @@ function openCatModal() {
 
 function closeCatModal() {
   document.getElementById('cat-modal').classList.remove('open');
-  renderCatTabs(); renderItems();
+  renderAllSections();
 }
 
 function renderExistingCats() {
@@ -638,8 +688,7 @@ function saveTheme() {
     document.getElementById('detail-title').textContent=t.emoji+' '+t.title;
     const col=getColor(color);
     document.getElementById('progress-fill').style.background=col.accent;
-    document.getElementById('add-item-btn').style.background=col.accent;
-    renderDetailMeta(); renderCatTabs();
+    renderDetailMeta(); renderAllSections();
   } else {
     const cats={};
     getAllCats().forEach(c=>cats[c]=[]);
